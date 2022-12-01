@@ -1,7 +1,7 @@
 module Day1 (day1) where
 
 import Data.List.Split (splitWhen)
-import Data.List (sort)
+import Data.List (sortBy)
 
 day1 :: IO ()
 day1 = do
@@ -10,5 +10,5 @@ day1 = do
       xs = map (sum . map read) $ splitWhen (== "") xs'
       day1a = maximum xs
   print day1a
-  let day1b = sum $ take 3 $ reverse $ sort xs
+  let day1b = sum . take 3 $ sortBy (flip compare) xs
   print day1b
