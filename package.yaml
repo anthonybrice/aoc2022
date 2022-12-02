@@ -21,7 +21,6 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
-- split
 
 ghc-options:
 - -Wall
@@ -58,3 +57,4 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - aoc2022
+    - hspec
