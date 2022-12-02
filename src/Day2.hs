@@ -72,12 +72,12 @@ part2Parse x = case x of
     8
   "B X" -> -- Lose 0 + 1
     1
-  "B Y" ->  -- Draw 2 + 2
-    4
+  "B Y" ->  -- Draw 2 + 3
+    5
   "B Z" -> -- Win 3 + 6
     9 
-  "C X" -> -- Lose 3 + 2
-    5
+  "C X" -> -- Lose 2 + 0
+    2
   "C Y" -> -- Draw 3 + 3
     6
   "C Z" -> 7
