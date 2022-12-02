@@ -4,13 +4,10 @@ module Day2 (day2) where
 
 day2 :: String -> String
 day2 input = 
-  let xs' = lines input
-      xs = map part1Parse xs'
-      ys = map part2Parse' xs'
-  in show (part1 xs) <> "\n" <> show (part2 ys)
-
-part1 :: [RpsGame] -> Integer
-part1 = sum . map rpsScore
+  let xs = lines input
+      part1 = sum $ map (rpsScore . part1Parse) xs
+      part2 = sum $ map (rpsScore . part2Parse) xs
+  in show part1 <> "\n" <> show part2
 
 data Move = Rock | Paper | Scissors deriving Show
 
@@ -37,11 +34,8 @@ player2Parse x = case x of 'X' -> Rock; 'Y' -> Paper; 'Z' -> Scissors
 part1Parse :: String -> RpsGame
 part1Parse x = RpsGame (player1Parse $ head x) (player2Parse $ last x)
 
-part2 :: [RpsGame] -> Integer
-part2 = sum . map rpsScore
-
-part2Parse' :: String -> RpsGame
-part2Parse' x = 
+part2Parse :: String -> RpsGame
+part2Parse x = 
   let p1 = player1Parse $ head x
   in RpsGame p1 (endRound p1 $ parseRpsResult $ last x)
 
