@@ -1,84 +1,56 @@
-module Day2 (day2, part2Parse) where
+{-# OPTIONS_GHC -Wno-incomplete-patterns #-}
+
+module Day2 (day2) where
 
 day2 :: String -> String
 day2 input = 
   let xs' = lines input
       xs = map part1Parse xs'
-      ys = map part2Parse xs'
+      ys = map part2Parse' xs'
   in show (part1 xs) <> "\n" <> show (part2 ys)
 
-part1 :: [Integer] -> Integer
-part1 = sum
+part1 :: [RpsGame] -> Integer
+part1 = sum . map rpsScore
 
-part2 :: [Integer] -> Integer
-part2 = sum
+data Move = Rock | Paper | Scissors deriving Show
 
-part1Parse :: String -> Integer
-part1Parse x = case x of
-  "A X" -> 
-    -- ShapeYouSelected 1
-    1
-    -- OutcomeOfRound
-    + 3 -- 4
-  "A Y" -> 
-    -- ShapeYouSelected
-    2
-    -- OutcomeOfRound
-    + 6 -- 8 
-  "A Z" ->
-    -- ShapeYouSelected
-    3
-    -- OutcomeOfRound
-    + 0 -- 3
-  "B X" -> 
-    -- ShapeYouSelected
-    1
-    -- OutcomeOfRound
-    + 0 -- 1
-  "B Y" -> 
-    -- ShapeYouSelected
-    2
-    -- OutcomeOfRound
-    + 3 -- 5
-  "B Z" -> 
-    -- ShapeYouSelected
-    3
-    -- OutcomeOfRound
-    + 6 -- 9
-  "C X" -> 
-    -- ShapeYouSelected
-    1
-    -- OutcomeOfRound
-    + 6 -- 7
-  "C Y" -> 
-    -- ShapeYouSelected
-    2
-    -- OutcomeOfRound
-    + 0 -- 2
-  "C Z" -> 
-    --ShapeYouSelected
-    3
-    -- OutcomeOfRound
-    + 3 -- 6
-  _ -> 0
+data RpsGame = RpsGame Move Move deriving Show
 
-part2Parse :: String -> Integer
-part2Parse x = case x of
-  "A X" -> -- Lose 0 + 3
-    3
-  "A Y" -> -- Draw 3 + 1
-    4
-  "A Z" -> -- Win 2 + 6
-    8
-  "B X" -> -- Lose 0 + 1
-    1
-  "B Y" ->  -- Draw 2 + 3
-    5
-  "B Z" -> -- Win 3 + 6
-    9 
-  "C X" -> -- Lose 2 + 0
-    2
-  "C Y" -> -- Draw 3 + 3
-    6
-  "C Z" -> 7
-  _ -> -1
+rpsScore :: RpsGame -> Integer
+rpsScore (RpsGame x y) = case (x, y) of
+  (Rock, Rock) -> 4
+  (Rock, Paper) -> 8
+  (Rock, Scissors) -> 3
+  (Paper, Rock) -> 1
+  (Paper, Paper) -> 5
+  (Paper, Scissors) -> 9
+  (Scissors, Rock) -> 7
+  (Scissors, Paper) -> 2
+  (Scissors, Scissors) -> 6
+
+player1Parse :: Char -> Move
+player1Parse x = case x of 'A' -> Rock; 'B' -> Paper; 'C' -> Scissors
+
+player2Parse :: Char -> Move
+player2Parse x = case x of 'X' -> Rock; 'Y' -> Paper; 'Z' -> Scissors
+
+part1Parse :: String -> RpsGame
+part1Parse x = RpsGame (player1Parse $ head x) (player2Parse $ last x)
+
+part2 :: [RpsGame] -> Integer
+part2 = sum . map rpsScore
+
+part2Parse' :: String -> RpsGame
+part2Parse' x = 
+  let p1 = player1Parse $ head x
+  in RpsGame p1 (endRound p1 $ parseRpsResult $ last x)
+
+data RpsResult = Win | Lose | Draw
+
+parseRpsResult :: Char -> RpsResult
+parseRpsResult x = case x of 'X' -> Lose; 'Y' -> Draw; 'Z' -> Win
+
+endRound :: Move -> RpsResult -> Move
+endRound Rock x = case x of Lose -> Scissors; Draw -> Rock; Win -> Paper
+endRound Paper x = case x of Lose -> Rock; Draw -> Paper; Win -> Scissors
+endRound Scissors x = case x of Lose -> Paper; Draw -> Scissors; Win -> Rock

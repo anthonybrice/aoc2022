@@ -13,8 +13,8 @@ aoc2022 = do
   case head args of
     "day1" -> do
       input <- readFile "input/day1"
-      print $ day1 input
+      putStrLn $ day1 input
     "day2" -> do
       input <- readFile "input/day2"
-      print $ day2 input
+      putStrLn $ day2 input
     _ -> print "Usage: aoc2022 dayN"
