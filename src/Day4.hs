@@ -14,14 +14,15 @@ day4 input = do
 type Range = (Integer, Integer)
 
 parseLine :: String -> (Range, Range)
-parseLine xs = join (***) parseRange $ second tail $ break (== ',') xs
+parseLine xs = join (***) parseRange . second tail $ break (== ',') xs
 
 parseRange :: String -> Range
-parseRange xs = join (***) read $ second tail $ break (== '-') xs
+parseRange xs = join (***) read . second tail $ break (== '-') xs
 
 isContained :: Range -> Range -> Bool
 isContained (s1, e1) (s2, e2) = 
   (s1 <= s2 && e1 >= e2) || (s2 <= s1 && e2 >= e1)
 
 isOverlapping :: Range -> Range -> Bool
-isOverlapping (s1, e1) (s2, e2) =  [s1..e1] `intersect` [s2..e2] /= []
+isOverlapping (s1, e1) (s2, e2) =
+  (s1 <= s2 && s2 <= e1) || (s2 <= s1 && s1 <= e2)
