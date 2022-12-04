@@ -1,6 +1,7 @@
 {-# OPTIONS_GHC -Wno-incomplete-patterns #-}
 
 module Day3 (day3) where
+  
 import Data.List (intersect)
 import Data.Char (ord, isUpper)
 
