@@ -1,8 +1,7 @@
 module Day4 (day4) where
-import Data.Bifunctor (second)
-import Control.Arrow ((***))
+
+import Control.Arrow ((***), second)
 import Control.Monad (join)
-import Data.List (intersect)
 
 day4 :: String -> String
 day4 input = do
@@ -20,7 +19,7 @@ parseRange :: String -> Range
 parseRange xs = join (***) read . second tail $ break (== '-') xs
 
 isContained :: Range -> Range -> Bool
-isContained (s1, e1) (s2, e2) = 
+isContained (s1, e1) (s2, e2) =
   (s1 <= s2 && e1 >= e2) || (s2 <= s1 && e2 >= e1)
 
 isOverlapping :: Range -> Range -> Bool
