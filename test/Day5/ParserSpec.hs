@@ -50,7 +50,7 @@ spec = do
 
   describe "parseInput" $
     it "parses the example input" $
-      last (readP_to_S parseInput exampleInput) `shouldBe` ((
+      parseMaybe parseInput exampleInput `shouldBe` Just (
         [ [ 'N'
           , 'Z'
           ]
@@ -66,7 +66,7 @@ spec = do
           , Move 2 2 1
           , Move 1 1 2
           ]
-      ), "")
+      )
       where
         exampleInput = init $ unlines
           [ "    [D]    "

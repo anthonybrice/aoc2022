@@ -2,14 +2,14 @@
 
 module Day5 (day5) where
 
-import Day5.Parser (parseInput)
+import Day5.Parser (parseInput, parseMaybe)
 import Day5.Types (Stack, Move, Move(Move))
-import Text.ParserCombinators.ReadP (readP_to_S)
 import Data.List (foldl')
+import Data.Maybe (fromJust)
 
 day5 :: String -> String
 day5 input =
-  let ((stacks, moves), "") = last $ readP_to_S parseInput input
+  let (stacks, moves) = fromJust $ parseMaybe parseInput input
       part1 = map head $ unload9000 stacks moves
       part2 = map head $ unload9001 stacks moves
   in part1 <> "\n" <> part2

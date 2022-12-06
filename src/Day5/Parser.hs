@@ -3,7 +3,7 @@
 
 module Day5.Parser (crate, rowCrate, rowCrates, parseInput, parseMaybe) where
 
-import Text.ParserCombinators.ReadP (ReadP, readP_to_S, get, satisfy, sepBy1, look, string, munch1, pfail)
+import Text.ParserCombinators.ReadP (ReadP, readP_to_S, get, satisfy, sepBy1, look, string, munch1, pfail, eof)
 import Day5.Types (Crate, Move(Move), Stack)
 import Data.Char (isDigit, isAlpha)
 import Data.List (transpose)
@@ -26,10 +26,11 @@ rowCrates = sepBy1 rowCrate $ satisfy (== '\n')
 parseInput :: ReadP ([Stack], [Move])
 parseInput = do
   rows <- rowCrates
+  _ <- satisfy (== '\n')
   skipLine
-  skipLine
-  skipLine
+  _ <- satisfy (== '\n')
   ys <- moves
+  eof
   return (map catMaybes $ transpose rows, ys)
 
 moves :: ReadP [Move]
