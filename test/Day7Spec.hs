@@ -7,7 +7,7 @@ spec :: Spec
 spec =
     describe "day7" $ do
       it "solves the example input" $
-        day7 exampleInput `shouldBe` "95437"
+        day7 exampleInput `shouldBe` "95437\n24933642"
 
 exampleInput = init $ unlines
   [ "$ cd /"

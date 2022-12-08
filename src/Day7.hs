@@ -3,46 +3,41 @@
   -fno-warn-unused-imports
   -fno-warn-unused-top-binds
   #-}
-
 {-# LANGUAGE
-  DerivingVia,
   LambdaCase,
-  MultiParamTypeClasses,
-  FunctionalDependencies,
-  FlexibleInstances,
-  DeriveFunctor,
-  DeriveFoldable,
-  DeriveTraversable
+  NumericUnderscores
   #-}
+
 module Day7 (day7) where
 
--- import Util.Parser (parseMaybe)
--- import Day7.Parser (parseInput)
--- import Day7.Types (TerminalOutput (..), Command (..), LsOutput)
--- import qualified Day7.Types as Pars
--- import Control.Monad.State (State, evalState, get, put)
--- import Data.List (find)
--- import Data.Maybe (fromJust)
--- import Data.Map (Map)
--- import qualified Data.Map as Map
-
-import Control.Monad
 import Control.Monad.State
-import Data.Bifunctor
+    ( evalState, MonadState(put, get), State )
 import Util.Parser (parseMaybe)
 import Day7.Parser (parseInput)
 import Day7.Types (TerminalOutput (..), Command (..))
 import qualified Day7.Types as Parse
 import Data.Maybe (fromJust)
 import Data.List (find, deleteBy)
-import Debug.Trace (trace)
-
 
 day7 :: String -> String
 day7 input =
   let termOut = fromJust $ parseMaybe parseInput input
       root = buildFs termOut
-  in show (buildFs termOut)
+      part1 = sum . filter (<= 100000) $ totalSizeOfEachDir root
+      part2 = sizeToDelete root
+  in show part1 <> "\n" <> show part2
+
+totalSize :: FS -> Integer
+totalSize (Dir ds fs _) = sum (map (\(File i _) -> i) fs <> map totalSize ds)
+
+totalSizeOfEachDir :: FS -> [Integer]
+totalSizeOfEachDir x@(Dir ds _ _) = totalSize x : concatMap totalSizeOfEachDir ds
+
+sizeToDelete :: FS -> Integer
+sizeToDelete root =
+  let x = totalSize root
+      xs = totalSizeOfEachDir root
+  in minimum [y | y <- xs, 70_000_000 - x + y >= 30_000_000]
 
 data File = File Integer String
   deriving Show
@@ -65,7 +60,7 @@ filesystem [] = do
 
 filesystem to = do
   case head to of
-    Com (Cd name) -> trace name $ cd name
+    Com (Cd name) -> cd name
     Com LsCommand -> pure ()
     Ls (Parse.Directory name) -> mkdir name
     Ls (Parse.File size name) -> mkfile size name
