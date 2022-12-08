@@ -1,8 +1,3 @@
-{-# OPTIONS_GHC
-  -Wall
-  -fno-warn-unused-imports
-  -fno-warn-unused-top-binds
-  #-}
 {-# LANGUAGE
   LambdaCase,
   NumericUnderscores
