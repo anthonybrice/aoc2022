@@ -18,7 +18,7 @@ day7 :: String -> String
 day7 input =
   let termOut = fromJust $ parseMaybe parseInput input
       root = buildFs termOut
-      part1 = sum . filter (<= 100000) $ totalSizeOfEachDir root
+      part1 = sum . filter (<= 100_000) $ totalSizeOfEachDir root
       part2 = sizeToDelete root
   in show part1 <> "\n" <> show part2
 

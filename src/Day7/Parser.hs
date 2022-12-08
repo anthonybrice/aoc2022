@@ -1,6 +1,6 @@
 module Day7.Parser (parseInput) where
 
-import Text.ParserCombinators.ReadP (ReadP, sepBy, (+++), satisfy, string, char, eof, sepBy1)
+import Text.ParserCombinators.ReadP (ReadP, sepBy, (+++), satisfy, string, char, eof)
 import Day7.Types (TerminalOutput(..), Command(..), LsOutput(..))
 import Util.Parser (integer, restOfLine)
 
