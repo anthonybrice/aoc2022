@@ -1,8 +1,9 @@
 module Day5.ParserSpec (spec) where
 
 import Test.Hspec
-import Day5.Parser (crate, rowCrate, rowCrates, parseInput, parseMaybe)
+import Day5.Parser (crate, rowCrate, rowCrates, parseInput)
 import Day5.Types (Move(Move))
+import Util.Parser (parseMaybe)
 import Text.ParserCombinators.ReadP (readP_to_S)
 -- import Data.Maybe (Maybe(Nothing))
 

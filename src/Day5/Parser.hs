@@ -1,27 +1,21 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Use <$>" #-}
 
-module Day5.Parser (crate, rowCrate, rowCrates, parseInput, parseMaybe) where
+module Day5.Parser (crate, rowCrate, rowCrates, parseInput) where
 
-import Text.ParserCombinators.ReadP (ReadP, readP_to_S, get, satisfy, sepBy1, look, string, munch1, pfail, eof)
+import Text.ParserCombinators.ReadP (ReadP, get, satisfy, sepBy, look, string, munch1, pfail, eof)
 import Day5.Types (Crate, Move(Move), Stack)
 import Data.Char (isDigit, isAlpha)
 import Data.List (transpose)
 import Data.Maybe (catMaybes)
 
-parseMaybe :: ReadP a -> String -> Maybe a
-parseMaybe parser input =
-  case readP_to_S parser input of
-    (result, []) : _ -> Just result
-    _ -> Nothing
-
 type RowCrate = [Maybe Crate]
 
 rowCrate :: ReadP RowCrate
-rowCrate = sepBy1 crate space
+rowCrate = sepBy crate space
 
 rowCrates :: ReadP [RowCrate]
-rowCrates = sepBy1 rowCrate $ satisfy (== '\n')
+rowCrates = sepBy rowCrate $ satisfy (== '\n')
 
 parseInput :: ReadP ([Stack], [Move])
 parseInput = do
@@ -34,7 +28,7 @@ parseInput = do
   return (map catMaybes $ transpose rows, ys)
 
 moves :: ReadP [Move]
-moves = sepBy1 move $ satisfy (== '\n')
+moves = sepBy move $ satisfy (== '\n')
 
 move :: ReadP Move
 move = do

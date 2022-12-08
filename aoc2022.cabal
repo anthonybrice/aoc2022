@@ -33,7 +33,11 @@ library
       Day5.Parser
       Day5.Types
       Day6
+      Day7
+      Day7.Parser
+      Day7.Types
       Lib
+      Util.Parser
   other-modules:
       Paths_aoc2022
   hs-source-dirs:
@@ -41,6 +45,8 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , containers
+    , mtl
   default-language: Haskell2010
 
 executable aoc2022-exe
@@ -53,6 +59,8 @@ executable aoc2022-exe
   build-depends:
       aoc2022
     , base >=4.7 && <5
+    , containers
+    , mtl
   default-language: Haskell2010
 
 test-suite aoc2022-test
@@ -65,6 +73,7 @@ test-suite aoc2022-test
       Day4Spec
       Day5.ParserSpec
       Day5Spec
+      Day7Spec
       Paths_aoc2022
   hs-source-dirs:
       test
@@ -72,5 +81,7 @@ test-suite aoc2022-test
   build-depends:
       aoc2022
     , base >=4.7 && <5
+    , containers
     , hspec
+    , mtl
   default-language: Haskell2010

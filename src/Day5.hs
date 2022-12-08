@@ -2,10 +2,11 @@
 
 module Day5 (day5) where
 
-import Day5.Parser (parseInput, parseMaybe)
-import Day5.Types (Stack, Move, Move(Move))
+import Day5.Parser (parseInput)
+import Day5.Types (Stack, Move(Move))
 import Data.List (foldl')
 import Data.Maybe (fromJust)
+import Util.Parser (parseMaybe)
 
 day5 :: String -> String
 day5 input =
@@ -13,7 +14,6 @@ day5 input =
       part1 = map head $ unload9000 stacks moves
       part2 = map head $ unload9001 stacks moves
   in part1 <> "\n" <> part2
-
 
 unload9000 :: [Stack] -> [Move] -> [Stack]
 unload9000 = foldl' runMove9000
