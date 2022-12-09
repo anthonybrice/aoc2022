@@ -8,7 +8,7 @@ import Data.List (find)
 day8 :: String -> String
 day8 input =
   let xs' = lines input
-      xs = map readRow xs'
+      xs = map (map digitToInt) xs'
       h = length xs
       l = length $ head xs
       grid' = buildGrid xs
@@ -20,9 +20,6 @@ day8 input =
 
 data Grid = Grid (Map (Int, Int) Int) (Int, Int)
   deriving (Show, Read)
-
-readRow :: String -> [Int]
-readRow = map digitToInt
 
 buildGrid :: [[Int]] -> Map (Int, Int) Int
 buildGrid xss =

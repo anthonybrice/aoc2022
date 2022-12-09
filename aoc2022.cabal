@@ -37,6 +37,7 @@ library
       Day7.Parser
       Day7.Types
       Day8
+      Day9
       Lib
       Util.Parser
   other-modules:
@@ -76,6 +77,7 @@ test-suite aoc2022-test
       Day5Spec
       Day7Spec
       Day8Spec
+      Day9Spec
       Paths_aoc2022
   hs-source-dirs:
       test
