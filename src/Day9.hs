@@ -9,8 +9,8 @@ day9 input =
   let xs = map parseMove $ lines input
       part1 = length
         . nub
-        . map snd
-        $ foldl' (\acc m -> uncurry (trail m) (head acc) <> acc) [((0,0),(0,0))] xs
+        . map last
+        $ foldl' (\acc m -> ropeTrail m (head acc) <> acc) [replicate 2 (0,0)] xs
 
       part2 = length
         . nub
@@ -51,23 +51,6 @@ singleMove' d (h : rs) =
   let h' = move h d
   in reverse $ foldl' (\acc r -> follow (head acc) r : acc) [h'] rs
 
-trail :: Move -> RP -> RP -> [(RP, RP)]
-trail (Move d i) rp1 rp2 = foldr (\d' acc -> uncurry (singleMove d') (head acc) : acc) [(rp1, rp2)] singleMoves
-  where
-    singleMoves = if i > 1 then replicate i d else [d]
-
-singleMove :: Direction -> RP -> RP -> (RP, RP)
-singleMove d h@(x, y) t@(x', y')
-  | x == x' + 1 && y == y' && d == Right = (move h d, h)
-  | x == x' - 1 && y == y' && d == Left = (move h d, h)
-  | x == x' && y == y' + 1 && d == Up = (move h d, h)
-  | x == x' && y == y' - 1 && d == Down = (move h d, h)
-  | x == x' - 1 && y == y' + 1 && (d == Up || d == Left) = (move h d, h)
-  | x == x' + 1 && y == y' + 1 && (d == Up || d == Right) = (move h d, h)
-  | x == x' + 1 && y == y' - 1 && (d == Down || d == Right) = (move h d, h)
-  | x == x' - 1 && y == y' - 1 && (d == Down || d == Left) = (move h d, h)
-  | otherwise = (move h d, t)
-
 move :: RP -> Direction -> RP
 move (x,y) d' = case d' of
   Right -> (x+1,y)
@@ -75,23 +58,10 @@ move (x,y) d' = case d' of
   Left -> (x-1,y)
   Down -> (x,y-1)
 
+touching :: RP -> RP -> Bool
+touching (x, y) (x', y') = abs (x - x') <= 1 && abs (y - y') <= 1
+
 -- | Given a moved head and the tail's current position, calculate the tail's next position
 follow :: RP -> RP -> RP
-follow (x, y) t@(x', y')
-  | x == x' - 2 && y == y' + 2 = (x' - 1, y' + 1)
-  | x == x' - 1 && y == y' + 2 = (x' - 1, y' + 1)
-  | x == x' && y == y' + 2 = (x', y' + 1)
-  | x == x' + 1 && y == y' + 2 = (x' + 1, y' + 1)
-  | x == x' + 2 && y == y' + 2 = (x' + 1, y' + 1)
-  | x == x' - 2 && y == y' + 1 = (x' - 1, y' + 1)
-  | x == x' + 2 && y == y' + 1 = (x' + 1, y' + 1)
-  | x == x' - 2 && y == y' = (x' - 1, y')
-  | x == x' + 2 && y == y' = (x' + 1, y')
-  | x == x' - 2 && y == y' - 1 = (x' - 1, y' - 1)
-  | x == x' + 2 && y == y' - 1 = (x' + 1, y' - 1)
-  | x == x' - 2 && y == y' - 2 = (x' - 1, y' - 1)
-  | x == x' - 1 && y == y' - 2 = (x' - 1, y' -  1)
-  | x == x' && y == y' - 2 = (x', y' - 1)
-  | x == x' + 1 && y == y' - 2 = (x' + 1, y' - 1)
-  | x == x' + 2 && y == y' - 2 = (x' +1, y' - 1)
-  | otherwise = t
+follow h@(x, y) t@(x', y') =
+  if touching h t then t else (x' + signum (x - x'), y' + signum (y - y'))
