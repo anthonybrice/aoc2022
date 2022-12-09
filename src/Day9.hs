@@ -40,16 +40,13 @@ parseMove (x:' ':y) = Move (f x) (read y) where
 parseMove _ = error ""
 
 ropeTrail :: Move -> Rope -> [Rope]
-ropeTrail _ [] = []
-ropeTrail (Move d i) rs = foldr (\d' acc -> singleMove' d' (head acc) : acc) [rs] singleMoves
-  where
-    singleMoves = if i > 1 then replicate i d else [d]
+ropeTrail (Move d i) rs = reverse $ take (i+1) $ iterate (singleMove d) rs
 
-singleMove' :: Direction -> Rope -> Rope
-singleMove' _ [] = []
-singleMove' d (h : rs) =
+singleMove :: Direction -> Rope -> Rope
+singleMove _ [] = []
+singleMove d (h : rs) =
   let h' = move h d
-  in reverse $ foldl' (\acc r -> follow (head acc) r : acc) [h'] rs
+  in reverse $ foldl' (\acc r-> follow (head acc) r : acc) [h'] rs
 
 move :: RP -> Direction -> RP
 move (x,y) d' = case d' of
