@@ -16,7 +16,7 @@ day10 input =
         $ foldl' (\(a, s) instr -> runState (runInstr' a 1 instr) s) (Cpu 1 1, mempty) xs
 
       part2 = unlines
-        . f
+        . map reverse
         . reverse
         . snd
         $ foldl' (\(a, s) instr -> runState (runInstr a 1 instr) s) (Cpu 1 1, mempty) xs
@@ -61,11 +61,14 @@ runInstr' (Cpu c x) tick instr = do
     (Addx _, 1) -> runInstr' cpu 2 instr
     _ -> return cpu
 
-runInstr :: Cpu Integer -> Int -> Instr Integer -> State String (Cpu Integer)
+runInstr :: Cpu Integer -> Int -> Instr Integer -> State [String] (Cpu Integer)
 runInstr (Cpu c x) tick instr = do
-  s <- get
+  ss <- get
 
-  put $ getPixel ((c - 1) `mod` 40) [x-1,x,x+1] : s
+  let i = (c - 1) `mod` 40
+  let ss' = if i == 0 then [] : ss else ss
+
+  put $ (getPixel ((c - 1) `mod` 40) [x-1,x,x+1] : head ss') : tail ss'
 
   let cpu@(Cpu c' x') = case (instr, tick) of
         (Noop, 1) -> Cpu (c+1) x
