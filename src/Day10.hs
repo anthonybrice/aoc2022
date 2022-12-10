@@ -12,13 +12,13 @@ day10 input =
       part1 = sum
         . elems
         . snd
-        $ foldl' (\(a, s) instr -> runState (runInstr a 1 mapStrengths instr) s) (Cpu 1 1, mempty) xs
+        $ foldl' (\(a, s) instr -> runState (runInstr' a 1 mapStrengths instr) s) (Cpu 1 1, mempty) xs
 
       part2 = unlines
         . map reverse
         . reverse
         . snd
-        $ foldl' (\(a, s) instr -> runState (runInstr a 1 drawPixel instr) s) (Cpu 1 1, mempty) xs
+        $ foldl' (\(a, s) instr -> runState (runInstr' a 1 drawPixel instr) s) (Cpu 1 1, mempty) xs
 
   in show part1 <> "\n" <> part2
 
@@ -50,13 +50,13 @@ drawPixel (Cpu c x) = do
 
   put $ (getPixel ((c - 1) `mod` 40) [x-1,x,x+1] : head ss') : tail ss'
 
-runInstr :: Cpu Integer -> Int -> (Cpu Integer -> State a b) -> Instr Integer -> State a (Cpu Integer)
-runInstr cpu@(Cpu c x) tick f instr = do
+runInstr' :: Cpu Integer -> Int -> (Cpu Integer -> State a b) -> Instr Integer -> State a (Cpu Integer)
+runInstr' cpu@(Cpu c x) tick f instr = do
   _ <- f cpu
 
   case (instr, tick) of
         (Noop, 1) -> return $ Cpu (c+1) x
-        (Addx _, 1) -> runInstr cpu 2 f instr
+        (Addx _, 1) -> runInstr' (Cpu (c+1) x) 2 f instr
         (Addx y, 2) -> return $ Cpu (c+1) (x+y)
         _ -> error "bad clock input"
 
