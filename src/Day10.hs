@@ -4,7 +4,6 @@ module Day10 (day10) where
 import Control.Monad.State (State, put, get, runState)
 import Data.Map (Map, insert, elems)
 import Data.List (foldl')
-import Control.Monad
 
 day10 :: String -> String
 day10 input =
@@ -27,15 +26,6 @@ data Cpu a = Cpu Integer a
 
 data Instr a = Noop | Addx a
   deriving Show
-
-f :: String -> [String]
-f xs =
-  let (s1, r1) = splitAt 40 xs
-      (s2, r2) = splitAt 40 r1
-      (s3, r3) = splitAt 40 r2
-      (s4, r4) = splitAt 40 r3
-      (s5, r5) = splitAt 40 r4
-    in [s1, s2, s3, s4, s5, r5]
 
 parseInstr :: Read a => String -> Instr a
 parseInstr xs = case words xs of
@@ -70,7 +60,7 @@ runInstr (Cpu c x) tick instr = do
 
   put $ (getPixel ((c - 1) `mod` 40) [x-1,x,x+1] : head ss') : tail ss'
 
-  let cpu@(Cpu c' x') = case (instr, tick) of
+  let cpu = case (instr, tick) of
         (Noop, 1) -> Cpu (c+1) x
         (Addx _, 1) -> Cpu (c+1) x
         (Addx y, 2) -> Cpu (c+1) (x+y)
