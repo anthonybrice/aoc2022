@@ -14,6 +14,7 @@ import Day7 (day7)
 import Day8 (day8)
 import Day9 (day9)
 import Day10 (day10)
+import Day11 (day11)
 
 aoc2022 :: IO ()
 aoc2022 = do
@@ -49,4 +50,7 @@ aoc2022 = do
     "day10" -> do
       input <- readFile "input/day10"
       putStrLn $ day10 input
+    "day11" -> do
+      input <- readFile "input/day11"
+      putStrLn $ day11 input
     _ -> print "Usage: aoc2022 dayN"
